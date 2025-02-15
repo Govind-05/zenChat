@@ -27,7 +27,7 @@ export default function WebRtcContextProvider({ children }) {
   const [callConnectionState, setCallConnectionState] = useState(null); // "initiated", "connecting", "connected"
   const [showVideoComp, setShowVideoComp] = useState(false);
   const [isMicrophoneActive, setIsMicrophoneActive] = useState(true);
-  const [isCameraActive, setIsCameraActive] = useState(true);
+  const [isCameraActive, setIsCameraActive] = useState(false);
   const [inputVideoDevices, setInputVideoDevices] = useState([]);
   const [inputAudioDevices, setInputAudioDevices] = useState([]);
   const [selectedInputVideoDevice, setSelectedInputVideoDevice] = useState();
@@ -97,6 +97,10 @@ export default function WebRtcContextProvider({ children }) {
 
       localStreamRef.current = stream;
       if (localVideoRef.current) {
+        const videoTracks = localStreamRef.current.getVideoTracks();
+      videoTracks.forEach((track) => {
+        track.enabled = false;
+      });
         localVideoRef.current.srcObject = stream;
         localVideoRef.current.muted = true; // mute the audio feed to the local user
       }
